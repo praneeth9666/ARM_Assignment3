@@ -1,8 +1,8 @@
-    PRESERVE8 
+PRESERVE8 
     THUMB 
     AREA    |.text|,CODE,READONLY 
     EXPORT __main
-	IMPORT printMsg1p		
+	IMPORT printMsg		
     ENTRY 
 __main    FUNCTION
 	
@@ -136,31 +136,42 @@ XNORlo	VLDR.F32 S10,=1 ;bias
 		VADD.F32 S19,S19,S10
 		VMOV.F32 S2,S19		
 		B main		
-main	B exploop
-templo1	B sigloop	
+main	BL exploop
+templo1	BL sigloop	
 templo  B final
 final	VCMP.F32 S0,S20
 		VMRS APSR_nzcv, FPSCR
 		BLE zero
 		B one
 one		MOV R0,#1
-		B printMsg1p
+		B printMsg
 		B stop
 zero	MOV R0,#0
-		B printMsg1p
+		B printMsg
 		B stop
-sigloop VLDR.F32 S4,=1 ;temp
+		
+sigloop PUSH {R6,LR}
+		VLDR.F32 S4,=1 ;temp
 		VADD.F32 S3,S0,S4
 		VDIV.F32 S0,S0,S3;e^x/(1+e^x)	
-		B templo
-exploop	MOV R0,#10;Number of terms in the seires
+		;B templo
+		SUB LR,#1
+		POP {R6,LR}
+		BX LR
+		
+exploop	PUSH {R8,LR}
+		MOV R0,#10;Number of terms in the seires
         MOV R1,#1;counter 
         VLDR.F32 S0,=1;Value of e in every iteration 
         VLDR.F32 S1,=1;temp variable 
         ;VLDR.F32 S2,=5;value of x 
 LOOP1   CMP R1,R0;Compare counter and N  
         BLE LOOP;if the neg flag is set then loop
-        B templo1;else stop 
+        ;B templo1;else stop
+		SUB LR,#1
+		POP {R8,LR}
+		BX LR
+			
 LOOP    VMUL.F32 S1,S1, S2; t = t*x 
         VMOV.F32 S5,R1; 
         VCVT.F32.U32 S5, S5;
@@ -173,4 +184,4 @@ LOOP    VMUL.F32 S1,S1, S2; t = t*x
 		
 stop    B stop 
         ENDFUNC 
-        END		
+        END
