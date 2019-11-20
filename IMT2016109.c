@@ -1,5 +1,5 @@
 
-#include "stm32f4xx.h"
+#include "TM4C123GH6PM.h"
 #include <string.h>
 #include<stdio.h>
 void printMsg(int a,int b)

@@ -5,8 +5,9 @@
 	IMPORT printMsg1p		
     ENTRY 
 __main    FUNCTION
-main10	VLDR.F32 S20,=0.5
-		MOV R7,#1
+	
+		VLDR.F32 S20,=0.5
+		MOV R7,#4
 		CMP R7,#1
 		BEQ ANDlo
 		
@@ -16,17 +17,7 @@ main10	VLDR.F32 S20,=0.5
 		CMP R7,#3
 		BEQ NOTlo
 		
-		;CMP R7,#4
-		;BEQ NANDlo
 		
-		;CMP R7,#5
-		;BEQ NORlo
-		
-		;CMP R7,#6
-		;BEQ XORlo
-		
-		;CMP R7,#7
-		;BEQ XNORlo
 	
 ANDlo	VLDR.F32 S10,=-0.2 ;bias
 		VLDR.F32 S11,=-0.1 ;w0
@@ -71,12 +62,24 @@ NOTlo	VLDR.F32 S10,=0.1 ;bias
 		VADD.F32 S19,S19,S10
 		VMOV.F32 S2,S19		
 		B main
+		
+		CMP R7,#4
+		BEQ NANDlo
+		
+		CMP R7,#5
+		BEQ NORlo
+		
+		CMP R7,#6
+		BEQ XORlo
+		
+		CMP R7,#7
+		BEQ XNORlo		
 NANDlo	VLDR.F32 S10,=0.3 ;bias
 		VLDR.F32 S11,=0.6 ;w0
 		VLDR.F32 S12,=-0.8	;w1,w2
 		VLDR.F32 S13,=-0.8
 		VLDR.F32 S14,=1
-		VLDR.F32 S15,=1
+		VLDR.F32 S15,=0
 		VLDR.F32 S21,=1
 		VMUL.F32 S16,S21,S13
 		VMUL.F32 S17,S11,S14;z=w1x1+w2x2+w3x3+bias
