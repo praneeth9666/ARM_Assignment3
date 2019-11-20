@@ -7,7 +7,7 @@
 __main    FUNCTION
 	
 		VLDR.F32 S20,=0.5
-		MOV R7,#4
+		MOV R7,#5
 		CMP R7,#1
 		BEQ ANDlo
 		
@@ -16,7 +16,7 @@ __main    FUNCTION
 		
 		CMP R7,#3
 		BEQ NOTlo
-		
+		B main9
 		
 	
 ANDlo	VLDR.F32 S10,=-0.2 ;bias
@@ -63,7 +63,7 @@ NOTlo	VLDR.F32 S10,=0.1 ;bias
 		VMOV.F32 S2,S19		
 		B main
 		
-		CMP R7,#4
+main9		CMP R7,#4
 		BEQ NANDlo
 		
 		CMP R7,#5
@@ -79,7 +79,7 @@ NANDlo	VLDR.F32 S10,=0.3 ;bias
 		VLDR.F32 S12,=-0.8	;w1,w2
 		VLDR.F32 S13,=-0.8
 		VLDR.F32 S14,=1
-		VLDR.F32 S15,=0
+		VLDR.F32 S15,=1
 		VLDR.F32 S21,=1
 		VMUL.F32 S16,S21,S13
 		VMUL.F32 S17,S11,S14;z=w1x1+w2x2+w3x3+bias
