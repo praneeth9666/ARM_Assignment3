@@ -1,0 +1,173 @@
+    PRESERVE8 
+    THUMB 
+    AREA    |.text|,CODE,READONLY 
+    EXPORT __main
+	IMPORT printMsg1p		
+    ENTRY 
+__main    FUNCTION
+main10	VLDR.F32 S20,=0.5
+		MOV R7,#1
+		CMP R7,#1
+		BEQ ANDlo
+		
+		CMP R7,#2
+		BEQ ORlo
+		
+		CMP R7,#3
+		BEQ NOTlo
+		
+		;CMP R7,#4
+		;BEQ NANDlo
+		
+		;CMP R7,#5
+		;BEQ NORlo
+		
+		;CMP R7,#6
+		;BEQ XORlo
+		
+		;CMP R7,#7
+		;BEQ XNORlo
+	
+ANDlo	VLDR.F32 S10,=-0.2 ;bias
+		VLDR.F32 S11,=-0.1 ;w0
+		VLDR.F32 S12,=0.2	;w1
+		VLDR.F32 S13,=0.2	;w2
+		VLDR.F32 S14,=1 ;x1
+		VLDR.F32 S15,=0	;x2
+		VLDR.F32 S21,=1	;x3
+		VMUL.F32 S16,S21,S13;z=w1x1+w2x2+w3x3
+		VMUL.F32 S17,S11,S14
+		VMUL.F32 S18,S12,S15
+		VADD.F32 S19,S16,S17
+		VADD.F32 S19,S19,S18
+		VADD.F32 S19,S19,S10
+		VMOV.F32 S2,S19
+		B main
+ORlo	VLDR.F32 S10,=-0.1 ;bias
+		VLDR.F32 S11,=-0.1 ;w0
+		VLDR.F32 S12,=0.7	;w1
+		VLDR.F32 S13,=0.7	;w3
+		VLDR.F32 S14,=1		;x1
+		VLDR.F32 S15,=0		;x2
+		VLDR.F32 S21,=1 	;x3
+		VMUL.F32 S16,S21,S13 ;z=w1x1+w2x2+w3x3+bias
+		VMUL.F32 S17,S11,S14
+		VMUL.F32 S18,S12,S15
+		VADD.F32 S19,S16,S17
+		VADD.F32 S19,S19,S18
+		VADD.F32 S19,S19,S10
+		VMOV.F32 S2,S19		
+		B main
+NOTlo	VLDR.F32 S10,=0.1 ;bias
+		VLDR.F32 S11,=0.5 ;w0
+		VLDR.F32 S12,=0.7	;w1
+		;VLDR.F32 S13,=0.7
+		VLDR.F32 S14,=1
+		VLDR.F32 S15,=0
+		VMUL.F32 S16,S14,S11
+		VMUL.F32 S17,S15,S12;z=w1x1+w2x2+bias
+		;VMUL.F32 S18,S12,S12
+		VADD.F32 S19,S16,S17
+		VADD.F32 S19,S19,S10
+		VMOV.F32 S2,S19		
+		B main
+NANDlo	VLDR.F32 S10,=0.3 ;bias
+		VLDR.F32 S11,=0.6 ;w0
+		VLDR.F32 S12,=-0.8	;w1,w2
+		VLDR.F32 S13,=-0.8
+		VLDR.F32 S14,=1
+		VLDR.F32 S15,=1
+		VLDR.F32 S21,=1
+		VMUL.F32 S16,S21,S13
+		VMUL.F32 S17,S11,S14;z=w1x1+w2x2+w3x3+bias
+		VMUL.F32 S18,S12,S15
+		VADD.F32 S19,S16,S17
+		VADD.F32 S19,S19,S18
+		VADD.F32 S19,S19,S10
+		VMOV.F32 S2,S19		
+		B main
+NORlo	VLDR.F32 S10,=0.1 ;bias
+		VLDR.F32 S11,=0.5 ;w0
+		VLDR.F32 S12,=-0.7	;w1,w2
+		VLDR.F32 S13,=-0.7
+		VLDR.F32 S14,=1
+		VLDR.F32 S15,=1
+		VLDR.F32 S21,=1
+		VMUL.F32 S16,S21,S13
+		VMUL.F32 S17,S11,S14
+		VMUL.F32 S18,S12,S15;z=w1x1+w2x2+w3x3+bias
+		VADD.F32 S19,S16,S17
+		VADD.F32 S19,S19,S18
+		VADD.F32 S19,S19,S10
+		VMOV.F32 S2,S19		
+		B main
+XORlo	VLDR.F32 S10,=1 ;bias
+		VLDR.F32 S11,=-5 ;w0
+		VLDR.F32 S12,=20	;w1,w2
+		VLDR.F32 S13,=10
+		VLDR.F32 S14,=1
+		VLDR.F32 S15,=1
+		VLDR.F32 S15,=1
+		VLDR.F32 S21,=1
+		VMUL.F32 S16,S21,S13
+		VMUL.F32 S17,S11,S14
+		VMUL.F32 S18,S12,S15;z=w1x1+w2x2+w3x3+bias
+		VADD.F32 S19,S16,S17
+		VADD.F32 S19,S19,S18
+		VADD.F32 S19,S19,S10
+		VMOV.F32 S2,S19		
+		B main
+XNORlo	VLDR.F32 S10,=1 ;bias
+		VLDR.F32 S11,=-5 ;w0
+		VLDR.F32 S12,=20	;w1,w2
+		VLDR.F32 S13,=10
+		VLDR.F32 S14,=1
+		VLDR.F32 S15,=1
+		VLDR.F32 S15,=1
+		VLDR.F32 S21,=1
+		VMUL.F32 S16,S21,S13
+		VMUL.F32 S17,S11,S14
+		VMUL.F32 S18,S12,S15;z=w1x1+w2x2+w3x3+bias
+		VADD.F32 S19,S16,S17
+		VADD.F32 S19,S19,S18
+		VADD.F32 S19,S19,S10
+		VMOV.F32 S2,S19		
+		B main		
+main	B exploop
+templo1	B sigloop	
+templo  B final
+final	VCMP.F32 S0,S20
+		VMRS APSR_nzcv, FPSCR
+		BLE zero
+		B one
+one		MOV R0,#1
+		B printMsg1p
+		B stop
+zero	MOV R0,#0
+		B printMsg1p
+		B stop
+sigloop VLDR.F32 S4,=1 ;temp
+		VADD.F32 S3,S0,S4
+		VDIV.F32 S0,S0,S3;e^x/(1+e^x)	
+		B templo
+exploop	MOV R0,#10;Number of terms in the seires
+        MOV R1,#1;counter 
+        VLDR.F32 S0,=1;Value of e in every iteration 
+        VLDR.F32 S1,=1;temp variable 
+        ;VLDR.F32 S2,=5;value of x 
+LOOP1   CMP R1,R0;Compare counter and N  
+        BLE LOOP;if the neg flag is set then loop
+        B templo1;else stop 
+LOOP    VMUL.F32 S1,S1, S2; t = t*x 
+        VMOV.F32 S5,R1; 
+        VCVT.F32.U32 S5, S5;
+        VDIV.F32 S1,S1,S5; 
+        VADD.F32 S0,S0,S1;
+        ADD R1,R1,#1;
+        B LOOP1;
+
+
+		
+stop    B stop 
+        ENDFUNC 
+        END		
